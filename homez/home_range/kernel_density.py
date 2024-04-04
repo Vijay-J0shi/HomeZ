@@ -16,33 +16,28 @@ from .utils import utils
 
 class KernelDensityEstimator:
 
-  def __init__(self, shapefile_path, output_raster_path, cell_size=1.0, bandwidth=None):
-    self.shapefile_path = shapefile_path
-    self.output_raster_path = output_raster_path
+  def __init__(self, x, y, cell_size=1.0, bandwidth=None):
+    """
+    :param x: x coordinate of each point
+    :param y: y coordinate of each point
+    :param bandwidth: smooth factor
+    """
     self.cell_size = cell_size
     self.bandwidth = bandwidth
-
-  def read_shapefile(self):
-    # Read the shapefile using geopandas
-    return utils.read_shapefile(self.shapefile_path)
+    self.x = x
+    self.y = y
 
   def estimate_density(self):
-    # Read the shapefile
-    gdf = self.read_shapefile()
-
-    # Extract x and y coordinates from the shapefile
-    x = gdf.x.astype(float)
-    y = gdf.y.astype(float)
 
     # Create a 2D grid of points
-    xi, yi = np.meshgrid(np.linspace(min(x), max(x), int((max(x) - min(x)) / self.cell_size)),
-                         np.linspace(min(y), max(y), int((max(y) - min(y)) / self.cell_size)))
+    xi, yi = np.meshgrid(np.linspace(min(self.x), max(self.x), int((max(self.x) - min(self.x)) / self.cell_size)),
+                         np.linspace(min(self.y), max(self.y), int((max(self.y) - min(self.y)) / self.cell_size)))
 
     # Estimate the kernel density with adaptive bandwidth if provided
     if self.bandwidth:
-      kde = gaussian_kde([x, y], bw_method=self.bandwidth)
+      kde = gaussian_kde([self.x, self.y], bw_method=self.bandwidth)
     else:
-      kde = gaussian_kde([x, y], bw_method='silverman')
+      kde = gaussian_kde([self.x, self.y], bw_method='silverman')
 
     zi = kde([xi.ravel(), yi.ravel()])
 
@@ -51,7 +46,7 @@ class KernelDensityEstimator:
 
     return [xi, yi, zi]
 
-  def plot_density(self):
+  def plot(self, output_raster_path):
     xi, yi, zi = self.estimate_density()
     plt.figure(figsize=(10, 8))
     plt.pcolormesh(xi, yi, zi, shading='auto')
@@ -59,8 +54,8 @@ class KernelDensityEstimator:
     plt.xlabel('X')
     plt.ylabel('Y')
     plt.title('Kernel Density Estimation')
-    plt.savefig(self.output_raster_path, format='tif')
+    plt.savefig(output_raster_path, format='tif')
 
-  def create_raster(self):
+  def create_raster(self, output_raster_path):
     estimate_density = self.estimate_density()
-    utils.create_raster(estimate_density, self.output_raster_path, self.cell_size)
+    utils.create_raster(estimate_density, output_raster_path, self.cell_size)

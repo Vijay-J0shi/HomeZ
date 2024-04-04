@@ -6,7 +6,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 try:
   from homez.home_range.utils import utils
-  from homez.home_range.kernel_density import KernelDensityEstimator
+  from homez.home_range.minimum_convex_polygon import MinimumConvexPolygon
 except ImportError as e:
   print(f"Error: import module: {e}")
   sys.exit(1)
@@ -19,5 +19,5 @@ print(gdf)
 x = gdf.x.astype(float)
 y = gdf.y.astype(float)
 
-kde = KernelDensityEstimator(x, y)
-kde.plot(output_raster_path="tests/kde_sample.tif")
+mcp = MinimumConvexPolygon(x, y)
+mcp.plot(output_raster_path="tests/mcp_sample.tif")
