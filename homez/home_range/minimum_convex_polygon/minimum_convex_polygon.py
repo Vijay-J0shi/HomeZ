@@ -4,26 +4,6 @@ import matplotlib.pyplot as plt
 # Read the dataset
 amphi = pd.read_csv("D:/Coding/HomeZ/homez/home_range/minimum_convex_polygon/tracking_sample.csv")
 
-# Drop rows with missing coordinates
-amphi.dropna(subset=['x', 'y'], inplace=True)
-
-# Extract x and y coordinates
-x_coords = amphi['x'].tolist()
-y_coords = amphi['y'].tolist()
-
-# MCP algorithm
-def mcp_algorithm(x_coords, y_coords):
-    points = list(zip(x_coords, y_coords))
-    points.sort()  # Sort points by x-coordinate
-
-    upper_hull = []
-    lower_hull = []
-
-    # Compute upper hull
-    for p in points:
-        while len(upper_hull) >= 2 and cross_product(upper_hull[-2], upper_hull[-1], p) <= 0:
-            upper_hull.pop()
-        upper_hull.append(p)
 
     # Compute lower hull
     for p in reversed(points):
@@ -42,19 +22,7 @@ def cross_product(o, a, b):
 mcp_results = []
 percentages = range(50, 105, 5)
 for percent in percentages:
-    num_points = int(len(x_coords) * percent / 100)
-    if num_points < 3:
-        continue
-    convex_hull = mcp_algorithm(x_coords[:num_points], y_coords[:num_points])
-    mcp_results.append((percent, convex_hull))
 
-# Plotting MCP
-fig, ax = plt.subplots(figsize=(10, 10))
-for percent, convex_hull in mcp_results:
-    x, y = zip(*convex_hull)
-    ax.fill(x, y, alpha=0.5, label=f"{percent}% of points")
-
-ax.scatter(x_coords, y_coords, color='black', s=5, label='Points')
 plt.xlabel('X Coordinate')
 plt.ylabel('Y Coordinate')
 plt.title('MCP for Different Percentages of Points')
