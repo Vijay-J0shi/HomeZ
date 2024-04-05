@@ -16,8 +16,9 @@ dataset = "tests/sample.csv"
 gdf = utils.read_shapefile(dataset)
 print(gdf)
 
-x = gdf.x.astype(float)
+x = gdf.geometry.x.astype(float)
 y = gdf.y.astype(float)
 
 kde = KernelDensityEstimator(x, y)
 kde.plot(output_raster_path="tests/kde_sample.tif")
+kde.create_raster("kde_sample.tif")
