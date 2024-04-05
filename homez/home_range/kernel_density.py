@@ -48,7 +48,7 @@ class KernelDensityEstimator:
 
   def plot(self, output_raster_path):
     xi, yi, zi = self.estimate_density()
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(10, 10))
     plt.pcolormesh(xi, yi, zi, shading='auto')
     plt.colorbar(label='Density')
     plt.xlabel('X')
