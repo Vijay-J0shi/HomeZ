@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 class MinimumConvexPolygon:
 
   def __init__(self, x, y):
-    self.x = x
-    self.y = y
+    self.x = x.tolist()
+    self.y = y.tolist()
 
   def cross_product(self, o, a, b):
     return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
@@ -52,8 +52,8 @@ class MinimumConvexPolygon:
       num_points = int(len(self.x) * percent / 100)
       if num_points < 3:  # minimum point required for polygon
         continue
-    convex_hull = self.mcp_algorithm(self.x[:num_points], self.y[:num_points])
-    mcp_results.append((percent, convex_hull))
+      convex_hull = self.mcp_algorithm(self.x[:num_points], self.y[:num_points])
+      mcp_results.append((percent, convex_hull))
 
     return mcp_results
 

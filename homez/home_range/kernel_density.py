@@ -10,13 +10,14 @@ Kernel Density Estimation
 from scipy.stats import gaussian_kde
 import numpy as np
 import matplotlib.pyplot as plt
+from typing import List
 
 from .utils import utils
 
 
 class KernelDensityEstimator:
 
-  def __init__(self, x, y, cell_size=1.0, bandwidth=None):
+  def __init__(self, x, y, cell_size=0.1, bandwidth=None):
     """
     :param x: x coordinate of each point
     :param y: y coordinate of each point
@@ -27,34 +28,54 @@ class KernelDensityEstimator:
     self.x = x
     self.y = y
 
-  def estimate_density(self):
-
-    # Create a 2D grid of points
+  def estimate_density(self, confidence_level=0.95):
     xi, yi = np.meshgrid(np.linspace(min(self.x), max(self.x), int((max(self.x) - min(self.x)) / self.cell_size)),
                          np.linspace(min(self.y), max(self.y), int((max(self.y) - min(self.y)) / self.cell_size)))
 
-    # Estimate the kernel density with adaptive bandwidth if provided
     if self.bandwidth:
       kde = gaussian_kde([self.x, self.y], bw_method=self.bandwidth)
     else:
       kde = gaussian_kde([self.x, self.y], bw_method='silverman')
 
     zi = kde([xi.ravel(), yi.ravel()])
-
-    # Reshape the density values to match the grid
     zi = zi.reshape(xi.shape)
 
-    return [xi, yi, zi]
+    # Calculate the threshold density for the specified confidence level
+    sorted_density_values = np.sort(zi.ravel())
+    threshold_index = int((1 - confidence_level) * len(sorted_density_values))
+    threshold_density = sorted_density_values[threshold_index]
 
-  def plot(self, output_raster_path):
-    xi, yi, zi = self.estimate_density()
+    # Set density values outside the confidence interval to NaN
+    zi[zi < threshold_density] = np.nan
+
+    # Calculate the area within the threshold density
+    area = np.nansum(zi) * self.cell_size ** 2
+
+    return ([xi, yi, zi], area)
+
+  def plot(self, estimate_density: List):
+    xi, yi, zi = estimate_density
     plt.figure(figsize=(10, 10))
     plt.pcolormesh(xi, yi, zi, shading='auto')
     plt.colorbar(label='Density')
     plt.xlabel('X')
     plt.ylabel('Y')
     plt.title('Kernel Density Estimation')
-    plt.savefig(output_raster_path, format='tif')
+
+    # Capture the plot as an image (tiff format)
+    from io import BytesIO
+    buffer = BytesIO()
+    plt.savefig(buffer, format='tiff')
+    buffer.seek(0)
+
+    # Return the image buffer
+    return buffer
+
+  def calculate(self, confidence_level=0.95):
+    estimate_density = self.estimate_density(confidence_level)
+    plot = self.plot(estimate_density[0])
+    area = estimate_density[1]
+    return [area, plot]
 
   def create_raster(self, output_raster_path):
     estimate_density = self.estimate_density()
