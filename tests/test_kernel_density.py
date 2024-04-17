@@ -1,3 +1,11 @@
+"""
+For Day & Night instead of manipulating the KernelDensityEstimator algorithm,
+seperate the data into day and night and get the value.
+
+Day(AM) data: [area, plot]
+Night(PM) data: [area, plot]
+"""
+
 import sys
 import os
 
@@ -14,10 +22,13 @@ except ImportError as e:
 dataset = "tests/sample.csv"
 
 gdf = utils.read_shapefile(dataset)
+gdf = gdf.dropna(subset=["x", "y"])
 print(gdf)
 
 x = gdf.x.astype(float)
 y = gdf.y.astype(float)
 
 kde = KernelDensityEstimator(x, y)
-kde.plot(output_raster_path="tests/kde_sample.tif")
+kde_result = kde.calculate(0.5)
+
+print(kde_result[0])
