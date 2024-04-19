@@ -1,4 +1,5 @@
 import geopandas as gpd
+import pandas as pd
 import geopy.distance
 import rasterio
 from rasterio.transform import from_origin
@@ -15,8 +16,8 @@ def separate_day_night_coordinates(gdf, time_column="time"):
   :param time_column: time column name
   """
 
-  # Convert the time column to datetime format using GeoPandas
-  gdf[time_column] = gdf[time_column].to_datetime()
+  # Convert the time column to datetime format using pandas
+  gdf[time_column] = pd.to_datetime(gdf[time_column])
 
   # Split the GeoDataFrame into day (AM) and night (PM) data
   day_data = gdf[gdf[time_column].dt.strftime('%p') == 'AM']
