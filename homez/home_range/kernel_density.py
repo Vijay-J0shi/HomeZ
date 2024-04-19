@@ -12,12 +12,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from typing import List
 
-from .utils import utils
-
 
 class KernelDensityEstimator:
 
-  def __init__(self, x, y, cell_size=0.1, bandwidth=None):
+  def __init__(self, x, y, cell_size=1.0, bandwidth=None):
     """
     :param x: x coordinate of each point
     :param y: y coordinate of each point
@@ -37,21 +35,21 @@ class KernelDensityEstimator:
     else:
       kde = gaussian_kde([self.x, self.y], bw_method='silverman')
 
-    zi = kde([xi.ravel(), yi.ravel()])
+    zi = kde(np.vstack([xi.ravel(), yi.ravel()]))
     zi = zi.reshape(xi.shape)
 
-    # Calculate the threshold density for the specified confidence level
+    # calculate the threshold density for the specified confidence level
     sorted_density_values = np.sort(zi.ravel())
     threshold_index = int((1 - confidence_level) * len(sorted_density_values))
     threshold_density = sorted_density_values[threshold_index]
 
-    # Set density values outside the confidence interval to NaN
+    # set density values outside the confidence interval to nan
     zi[zi < threshold_density] = np.nan
 
-    # Calculate the area within the threshold density
+    # calculate the area within the threshold density
     area = np.nansum(zi) * self.cell_size ** 2
 
-    return ([xi, yi, zi], area)
+    return [xi, yi, zi], area
 
   def plot(self, estimate_density: List):
     xi, yi, zi = estimate_density
@@ -76,7 +74,3 @@ class KernelDensityEstimator:
     plot = self.plot(estimate_density[0])
     area = estimate_density[1]
     return [area, plot]
-
-  def create_raster(self, output_raster_path):
-    estimate_density = self.estimate_density()
-    utils.create_raster(estimate_density, output_raster_path, self.cell_size)
