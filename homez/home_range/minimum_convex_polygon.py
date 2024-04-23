@@ -76,3 +76,4 @@ plt.savefig(output_raster_path, format='tif')
 
 def create_raster(self, output_raster_path):
     pass
+
