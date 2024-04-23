@@ -31,7 +31,7 @@ x_day = day_data.x.astype(float)
 y_day = day_data.y.astype(float)
 
 kde_day = KernelDensityEstimator(x_day, y_day)
-kde_day_res = kde_day.calculate(0.5)
+kde_day_res = kde_day.calculate(0.1)
 
 print(kde_day_res[0])
 
