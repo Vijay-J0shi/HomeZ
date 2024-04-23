@@ -12,7 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the dataset
-turtle = pd.read_csv("D:/Coding/Minor-2/tracking_sample.csv")
+turtle = pd.read_csv("D:/Coding/HomeZ/homez/home_range/tracking_sample.csv")
 
 # Drop rows with missing coordinates
 turtle.dropna(subset=['x', 'y'], inplace=True)
