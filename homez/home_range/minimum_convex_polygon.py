@@ -1,5 +1,6 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+from io import BytesIO
+import pandas as pd
 
 class MinimumConvexPolygon:
     def __init__(self, x, y, alpha):
@@ -26,6 +27,7 @@ class MinimumConvexPolygon:
                 lower_hull.pop()
             lower_hull.append(p)
 
+        # Combine upper and lower hulls to form the convex hull
         convex_hull = upper_hull[:-1] + lower_hull[:-1]
         return convex_hull
 
@@ -35,6 +37,7 @@ class MinimumConvexPolygon:
     def plot_mcp(self):
         convex_hull = self.mcp_algorithm()
 
+        # Plotting MCP
         fig, ax = plt.subplots(figsize=(10, 10))
         x, y = zip(*convex_hull)
         ax.fill(x, y, alpha=self.alpha)
@@ -43,15 +46,25 @@ class MinimumConvexPolygon:
         plt.ylabel('Y Coordinate')
         plt.title('Minimum Convex Polygon')
         plt.legend()
+
+        # Save plot as tif image
+        buffer = BytesIO()
+        plt.savefig(buffer, format='tiff')
+        buffer.seek(0)
         plt.show()
+        plt.close()
 
-        plt.savefig("output_raster_path.tif", format='tif')
+        return buffer
 
-# Read the dataset
 turtle = pd.read_csv("D:/Coding/HomeZ/homez/home_range/tracking_sample.csv")
 turtle.dropna(subset=['x', 'y'], inplace=True)
 x_coords = [float(x) for x in turtle['x'].tolist()]
-y_coords = [float(y)for y in turtle['y'].tolist()]
+y_coords = [float(y) for y in turtle['y'].tolist()]
 
 mcp = MinimumConvexPolygon(x_coords, y_coords, alpha=0.5)
-mcp.plot_mcp()
+image_buffer = mcp.plot_mcp()
+
+
+#  saving to a file:
+with open('mcp_plot.tiff', 'wb') as f:
+    f.write(image_buffer.getvalue())
