@@ -45,8 +45,7 @@ class MinimumConvexPolygon:
         buffer = BytesIO()
         plt.savefig(buffer, format='tiff')
         buffer.seek(0)
-        plt.show()
-        plt.close()
+
 
         return buffer
 
