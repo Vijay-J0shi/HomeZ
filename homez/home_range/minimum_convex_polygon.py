@@ -45,7 +45,8 @@ class MinimumConvexPolygon:
         buffer = BytesIO()
         plt.savefig(buffer, format='tiff')
         buffer.seek(0)
-
+        plt.show()
+        plt.close()
 
         return buffer
 
@@ -60,8 +61,6 @@ class MinimumConvexPolygon:
         area = abs(area) / 2.0
         return area
 
-    def get_corner_points(self):
-        return self.mcp_algorithm()
 
 
 turtle = pd.read_csv("/content/tracking_sample.csv")
@@ -72,9 +71,9 @@ mcp = MinimumConvexPolygon(points, alpha=0.5)
 image_buffer = mcp.plot_mcp()
 area = mcp.calculate_area()
 print("Area of the Minimum Convex Polygon:", area)
-corner_points = mcp.get_corner_points()
-print("Corner Points:", corner_points)
 
 
+# Saving to a file:
 with open('mcp_plot.tiff', 'wb') as f:
     f.write(image_buffer.getvalue())
+
