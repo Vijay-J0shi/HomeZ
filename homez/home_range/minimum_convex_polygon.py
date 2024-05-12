@@ -1,16 +1,10 @@
-import matplotlib.pyplot as plt
-from io import BytesIO
-import pandas as pd
-
 class MinimumConvexPolygon:
-    def __init__(self, x, y, alpha):
-        self.x = x
-        self.y = y
+    def __init__(self, points, alpha):
+        self.points = points
         self.alpha = alpha
 
     def mcp_algorithm(self):
-        points = list(zip(self.x, self.y))
-        points.sort()
+        points = sorted(self.points)
 
         upper_hull = []
         lower_hull = []
@@ -41,7 +35,7 @@ class MinimumConvexPolygon:
         fig, ax = plt.subplots(figsize=(10, 10))
         x, y = zip(*convex_hull)
         ax.fill(x, y, alpha=self.alpha)
-        ax.scatter(self.x, self.y, color='black', s=5, label='Points')
+        ax.scatter(*zip(*self.points), color='black', s=5, label='Points')
         plt.xlabel('X Coordinate')
         plt.ylabel('Y Coordinate')
         plt.title('Minimum Convex Polygon')
@@ -55,15 +49,32 @@ class MinimumConvexPolygon:
 
         return buffer
 
-turtle = pd.read_csv("D:/Coding/HomeZ/homez/home_range/tracking_sample.csv")
+    def calculate_area(self):
+        convex_hull = self.mcp_algorithm()
+        n = len(convex_hull)
+        area = 0
+        for i in range(n):
+            j = (i + 1) % n
+            area += convex_hull[i][0] * convex_hull[j][1]
+            area -= convex_hull[j][0] * convex_hull[i][1]
+        area = abs(area) / 2.0
+        return area
+
+    def get_corner_points(self):
+        return self.mcp_algorithm()
+
+
+turtle = pd.read_csv("/content/tracking_sample.csv")
 turtle.dropna(subset=['x', 'y'], inplace=True)
-x_coords = [float(x) for x in turtle['x'].tolist()]
-y_coords = [float(y) for y in turtle['y'].tolist()]
+points = [(float(x), float(y)) for x, y in zip(turtle['x'], turtle['y'])]
 
-mcp = MinimumConvexPolygon(x_coords, y_coords, alpha=0.5)
+mcp = MinimumConvexPolygon(points, alpha=0.5)
 image_buffer = mcp.plot_mcp()
+area = mcp.calculate_area()
+print("Area of the Minimum Convex Polygon:", area)
+corner_points = mcp.get_corner_points()
+print("Corner Points:", corner_points)
 
 
-#  saving to a file:
 with open('mcp_plot.tiff', 'wb') as f:
     f.write(image_buffer.getvalue())
