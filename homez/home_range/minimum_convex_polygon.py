@@ -70,8 +70,13 @@ points = [(float(x), float(y)) for x, y in zip(turtle['x'], turtle['y'])]
 mcp = MinimumConvexPolygon(points, alpha=0.5)
 image_buffer = mcp.plot_mcp()
 area = mcp.calculate_area()
-print("Area of the Minimum Convex Polygon:", area)
+# print("Area of the Minimum Convex Polygon:", area)
+area_square_meters = mcp.calculate_area()
 
+
+area_square_kilometers = area_square_meters / 1e6
+
+print("Area of the Minimum Convex Polygon (square kilometers):", area_square_kilometers)
 
 # Saving to a file:
 with open('mcp_plot.tiff', 'wb') as f:
