@@ -2,8 +2,6 @@ import geopandas as gpd
 import pandas as pd
 from geopy.distance import geodesic
 
-from typing import Tuple
-
 
 def read_shapefile(shapefile):
   # Read the shapefile using geopandas
