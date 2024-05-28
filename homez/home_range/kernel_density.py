@@ -1,62 +1,69 @@
 """
-Copyright 2024 HomeZ
 
+Copyright 2024 HomeZ
 Kernel Density Estimation
 -------------------------
 """
 
 # Author: Adam-Al-Rahman <adam.al.rahman.dev@gmail.com>
 
-from scipy.stats import gaussian_kde
-from scipy.integrate import dblquad  # Importing double integration for 2D data
-import numpy as np
-import matplotlib.pyplot as plt
 from typing import List
+
+import matplotlib.pyplot as plt
+import geopandas as gpd
+from shapely.geometry import Point
+import numpy as np
+from scipy.stats import gaussian_kde
 
 
 class KernelDensityEstimator:
 
-  def __init__(self, x, y, cell_size=1.0):
+  def __init__(self, latitude: List[float], longitude: List[float]):
     """
-    :param x: x coordinate of each point
-    :param y: y coordinate of each point
+    :param latitude: x coordinate of each point
+    :param longitude: y coordinate of each point
     :param bandwidth: smooth factor
     """
-    self.cell_size = cell_size
-    self.x = x
-    self.y = y
+
+    # Create a GeoDataFrame from the points
+    geometry = [Point(lon, lat) for lon, lat in zip(longitude, latitude)]
+    gdf = gpd.GeoDataFrame(geometry=geometry, crs='EPSG:4326')
+
+    # Extract latitude and longitude coordinates
+    self.latitude = gdf.geometry.latitude
+    self.longitude = gdf.geometry.longitude
+
+    # Ensure the CSV has 'longitude' and 'latitude' columns not empty
+    if not self.latitude and not self.longitude:
+      raise ValueError("CSV must contain 'longitude' and 'latitude' columns")
+    elif not self.latitude:
+      raise ValueError("CSV must contain 'latitude' columns")
+    elif not self.longitude:
+      raise ValueError("CSV must contain 'longitude' columns")
 
   def estimate_density(self, bandwidth=None):
-    xi, yi = np.meshgrid(np.linspace(min(self.x), max(self.x), int((max(self.x) - min(self.x)) / self.cell_size)),
-                         np.linspace(min(self.y), max(self.y), int((max(self.y) - min(self.y)) / self.cell_size)))
-
+    dataset = np.vstack([self.latitude, self.longitude])
     if bandwidth:
-      kde = gaussian_kde([self.x, self.y], bw_method=bandwidth)
+      kde = gaussian_kde(dataset, bw_method=bandwidth)
     else:
-      kde = gaussian_kde([self.x, self.y], bw_method='silverman')
+      kde = gaussian_kde(dataset, bw_method='silverman')
 
-    zi = kde(np.vstack([xi.ravel(), yi.ravel()]))
-    zi = zi.reshape(xi.shape)
+    # Create grid to evaluate kde
+    lat_min, lat_max = min(self.latitude) - 1, max(self.latitude) + 1
+    lon_min, lon_max = min(self.longitude) - 1, max(self.longitude) + 1
+    X, Y = np.mgrid[lon_min:lon_max:100j, lat_min:lat_max:100j]
+    positions = np.vstack([X.ravel(), Y.ravel()])
+    Z = np.reshape(kde(positions).T, X.shape)
 
-    # Define the integration limits (based on your data range)
-    lower_limit_x = min(self.x)
-    upper_limit_x = max(self.x)
-    lower_limit_y = min(self.y)
-    upper_limit_y = max(self.y)
+    return [Z, lat_min, lat_max, lon_min, lon_max]
 
-    # Integrate the KDE along both dimensions
-    area, _ = dblquad(lambda x, y: kde.evaluate([self.x, self.y])[0], lower_limit_x, upper_limit_x, lower_limit_y,
-                      upper_limit_y)
-
-    return [xi, yi, zi], area
-
-  def plot(self, estimate_density: List):
-    xi, yi, zi = estimate_density
-    plt.figure(figsize=(10, 10))
-    plt.pcolormesh(xi, yi, zi, shading='auto')
-    plt.colorbar(label='Density')
-    plt.xlabel('X')
-    plt.ylabel('Y')
+  def plot(self, estimate_density):
+    Z, lat_min, lat_max, lon_min, lon_max = estimate_density
+    _, ax = plt.subplots()
+    ax.imshow(np.rot90(Z), cmap="viridis", extent=[lon_min, lon_max, lat_min, lat_max])
+    ax.plot(self.longitude, self.latitude, 'k.', markersize=2)
+    plt.xlabel('Longitude')
+    plt.ylabel('Latitude')
     plt.title('Kernel Density Estimation')
 
     # Capture the plot as an image (tiff format)
@@ -68,8 +75,5 @@ class KernelDensityEstimator:
     # Return the image buffer
     return buffer
 
-  def calculate(self, bandwidth=0.95):
-    estimate_density = self.estimate_density(bandwidth)
-    plot = self.plot(estimate_density[0])
-    area = estimate_density[1]
-    return [area, plot]
+  def calculate(self, bandwidth=None):
+    return self.plot(self.estimate_density(bandwidth))
