@@ -52,6 +52,9 @@ def sort_time_values(df, column_name):
 
 
 def homez_distance_displacement(gdf):
+  """
+  Calculate the distance and displacement given (longitude, latitude) as coordinates
+  """
   # Convert to a GeoDataFrame
   gdf = gpd.GeoDataFrame(gdf, geometry=gpd.points_from_xy(gdf.Longitude, gdf.Latitude))
   results = []
