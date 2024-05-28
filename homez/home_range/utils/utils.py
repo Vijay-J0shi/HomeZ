@@ -54,6 +54,8 @@ def sort_time_values(df, column_name):
 def homez_distance_displacement(gdf):
   """
   Calculate the distance and displacement given (longitude, latitude) as coordinates
+  :param gdf: geopandaa dataframe along with Longitude, Latitude
+  :return: List of distances and displacement with respect to Collar_id
   """
   # Convert to a GeoDataFrame
   gdf = gpd.GeoDataFrame(gdf, geometry=gpd.points_from_xy(gdf.Longitude, gdf.Latitude))
