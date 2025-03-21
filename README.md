@@ -1,6 +1,9 @@
 <a href="https://youtu.be/15NYxZJi7tU">
-  <img src="https://img.youtube.com/vi/15NYxZJi7tU/0.jpg" width="800" height="400">
-</a>
+  <img src="https://img.youtube.com/vi/15NYxZJi7tU/0.jpg" width="800" height="400" alt="Click to watch">
+</a>  
+
+### ▶ Click the image above to watch the video on YouTube!
+
 
 <div align="center">
 
@@ -19,11 +22,6 @@
 <br/>
 
 
-[HomeZ WEBSITE](https://github.com/Vijay-J0shi/HomeZ)
-  <p>
-    <a href="https://github.com/Vijay-J0shi/HomeZ" target="_blank">
-      <img width="100%" src="docs/assets/images/HomeZ_Landing.png"></a>
-  </p>
 
 
 </div>
