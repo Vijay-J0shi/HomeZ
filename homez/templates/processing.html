@@ -1,0 +1,117 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script>{% extends "base.html" %}
+
+{% block content %}
+<div class="processing-container">
+    <h1 class="text-center mb-4 text-white">Processing: {{ filename }}</h1>
+    
+    <!-- Processing Form -->
+    <div class="row">
+        <div class="col-md-3 sidebar">
+            <form method="post" action="{{ url_for('processing', filename=filename) }}">
+                <div class="form-group">
+                    <label for="algorithm" class="text-white">Select Algorithm:</label>
+                    <select name="algorithm" id="algorithm" class="form-control">
+                        <option value="">Choose your algorithm</option>
+                        <option value="MCP">MCP</option>
+                        <option value="KDE">KDE</option>
+                    </select>
+                </div>
+                <div class="form-group" id="bandwidth-group" style="display: none;">
+                    <label for="bandwidth" class="text-white">Bandwidth (0-1):</label>
+                    <input type="number" name="bandwidth" id="bandwidth" class="form-control" step="0.01" min="0" max="1" placeholder="Enter bandwidth (0-1)">
+                </div>
+                <div class="form-group" id="confidence-group" style="display: none;">
+                    <label for="confidence" class="text-white">Confidence Interval (7-100):</label>
+                    <input type="number" name="confidence" id="confidence" class="form-control" step="1" min="7" max="100" placeholder="Enter confidence (7-100)">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Start Processing</button>
+            </form>
+            
+            <!-- Results -->
+            {% if day_img and night_img %}
+            <div class="result-box mt-4">
+                <h5 class="text-center text-white">Results</h5>
+                {% if algorithm == 'MCP' %}
+                <p class="text-white">Day Area: {{ day_area }} km²</p>
+                <p class="text-white">Night Area: {{ night_area }} km²</p>
+                <p class="text-white">Total Area: {{ total_area }} km²</p>
+                {% endif %}
+                <a href="{{ url_for('download_file', filename=day_img.split('/')[-1]) }}" class="btn btn-success btn-block mt-2">Download Day Image</a>
+                <a href="{{ url_for('download_file', filename=night_img.split('/')[-1]) }}" class="btn btn-success btn-block mt-2">Download Night Image</a>
+                {% if excel_file %}
+                <a href="{{ url_for('download_file', filename=excel_file.split('/')[-1]) }}" class="btn btn-success btn-block mt-2">Download Excel</a>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <a href="{{ url_for('file_selection') }}" class="btn btn-danger btn-block mt-4">Back to File Selection</a>
+        </div>
+        
+        <!-- Image Display -->
+        <div class="col-md-6">
+            <div class="image-frame">
+                {% if day_img %}
+                <img src="{{ url_for('static', filename=day_img) }}" alt="Day Plot" class="img-fluid">
+                {% else %}
+                <div class="placeholder">Day Plot Placeholder</div>
+                {% endif %}
+            </div>
+            <div class="image-frame mt-4">
+                {% if night_img %}
+                <img src="{{ url_for('static', filename=night_img) }}" alt="Night Plot" class="img-fluid">
+                {% else %}
+                <div class="placeholder">Night Plot Placeholder</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Data Table -->
+        <div class="col-md-3">
+            {% if table %}
+            <div class="table-container">
+                {{ table | safe }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
