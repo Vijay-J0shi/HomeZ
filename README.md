@@ -49,12 +49,16 @@ This is a desktop application built using Python and PyQt5 that allows users to 
 
 ```bash
 .
-app.py                        # Main entry point for the application
-img_ploter.py                 # Contains functions for Kernel Density Estimation (KDE)
-minimum_convex_polygon.py      # Contains functions for Minimum Convex Polygon (MCP) computation
-requirements.txt               # List of dependencies
-nature.jpg                   # Background image used in the application
-README.md                     # This README file
-assets/                       # Folder for assets (images, logos, etc.)
+├── app.py                        # Main entry point for the application
+├── img_ploter.py                 # Contains functions for Kernel Density Estimation (KDE)
+├── minimum_convex_polygon.py      # Contains functions for Minimum Convex Polygon (MCP) computation
+├── requirements.txt              # List of dependencies
+├── nature.jpg                    # Background image used in the application
+├── README.md                     # This README file
+└── assets/                       # Folder for assets (images, logos, etc.)
 ```
 
+
+HomeZ has a MIT-style license, as found in the MIT License file.
+
+- **MIT Licence**: This [OSI-approved](https://opensource.org/licenses/) open-source license is ideal for students and enthusiasts, promoting open collabaration and knowledge sharing. See the [MIT License](https://github.com/Vijay-J0shi/HomeZ/blob/main/LICENSE) file for more details.
