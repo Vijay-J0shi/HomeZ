@@ -68,41 +68,10 @@ mcp = MinimumConvexPolygon(x_coords, y_coords, alpha=0.5)
 image_buffer = mcp.plot_mcp()
 ```
 
-## Saving the Image
-
-Both KDE and MCP generate plots as `tiff` images stored in memory buffers. You can save them to a file like this:
-```python
-with open('plot.tiff', 'wb') as f:
-    f.write(image_buffer.getvalue())
-```
-
 
 # Minimum Convex Polygon (MCP) for Animal Home Range Estimation
 
 This project implements a Minimum Convex Polygon (MCP) algorithm, commonly used in ecology to estimate the home range of animals based on geographical coordinates. The MCP is computed using convex hulls of geographic points, with confidence intervals and area calculations provided.
-
-## Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-  - [Input Data](#input-data)
-  - [Running the MCP Function](#running-the-mcp-function)
-  - [Output](#output)
-- [Methods](#methods)
-  - [mcp_algorithm](#mcp_algorithm)
-  - [plot_mcp](#plot_mcp)
-  - [calculate_area](#calculate_area)
-- [Dependencies](#dependencies)
-- [License](#license)
-
-## Installation
-
-To use this project, ensure you have the following libraries installed:
-
-```bash
-pip install pandas matplotlib numpy
-```
-
-Additionally, you must have the `utils` module, specifically the functions `read_shapefile` and `separate_day_night_coordinates`, which are required for reading geographic data and separating day/night time points.
 
 ## Usage
 
@@ -134,14 +103,6 @@ The `MCP` function returns:
 4. **area_night**: The area of the nighttime MCP polygon in square kilometers.
 5. **area_total**: The total area of the MCP polygon for all points in square kilometers.
 
-You can save the images from the buffers if needed:
-```python
-with open('mcp_day.tiff', 'wb') as f:
-    f.write(image_buffer_day.getvalue())
-
-with open('mcp_night.tiff', 'wb') as f:
-    f.write(image_buffer_night.getvalue())
-```
 
 ### Example Output:
 
@@ -180,33 +141,11 @@ Additionally, the `utils` module (external to this project) is required for:
 
 This project provides a Python application that performs Kernel Density Estimation (KDE) and distance displacement calculations for geospatial data. The project includes utilities for visualizing KDE plots for day and night time data and calculating home range displacements using shapefiles.
 
-## Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-  - [Input Data](#input-data)
-  - [KDE Function](#kde-function)
-  - [Distance Displacement Function](#distance-displacement-function)
-- [Methods](#methods)
-  - [kde](#kde)
-  - [day_kde](#day_kde)
-  - [night_kde](#night_kde)
-  - [dist](#dist)
-- [Dependencies](#dependencies)
-- [License](#license)
-
-## Installation
-
-To run this project, ensure that you have the following libraries installed:
-
-```bash
-pip install PyQt5 pandas numpy matplotlib pillow
-```
-
 Additionally, you must have the `utils` module which includes functions such as:
 - `homez_distance_displacement`: Calculates distance displacement for geospatial data.
 - `read_shapefile`: Reads the input shapefile data.
-- `separate_day_night_coordinates`: Splits the data into day and night based on time column.
-- `KernelDensityEstimator`: A class for KDE calculation.
+-'separate_day_night_coordinates`: Splits the data into day and night based on time column.
+-`KernelDensityEstimator`: A class for KDE calculation.
 
 ## Usage
 
@@ -214,16 +153,16 @@ Additionally, you must have the `utils` module which includes functions such as:
 
 The application expects a dataset (typically a shapefile) that contains geospatial points, with the following attributes:
 - `Longitude`: X-coordinate of the geographic points.
-- `Latitude`: Y-coordinate of the geographic points.
-- `NST Time`: Timestamp for each data point used for separating day and night points.
+-`Latitude`: Y-coordinate of the geographic points.
+ `NST Time`: Timestamp for each data point used for separating day and night points.
 
 ### KDE Function
 
 The `kde` function performs Kernel Density Estimation on both day and night time data from the shapefile.
 
 #### Parameters:
-- `path`: Path to the shapefile containing geospatial data.
-- `bandwidth`: Bandwidth for the KDE algorithm. It controls the smoothing of the KDE plot. Must be less than or equal to 1.0.
+ `path`: Path to the shapefile containing geospatial data.
+`bandwidth`: Bandwidth for the KDE algorithm. It controls the smoothing of the KDE plot. Must be less than or equal to 1.0.
 
 #### Example:
 
@@ -235,20 +174,13 @@ day_plot, night_plot = kde('path_to_shapefile', bandwidth=0.95)
 
 ### Distance Displacement Function
 
-The `dist` function calculates the displacement or movement distance for geospatial data points.
+ The `dist` function calculates the displacement or movement distance for geospatial data points.
 
-#### Example:
-
-```python
-from kde import dist
-
-displacement = dist('path_to_shapefile')
-print(f"Total displacement: {displacement}")
-```
 
 ## Methods
 
 ### `kde(path, bandwidth=0.95)`
+
 This function reads the shapefile and separates the day and night coordinates, then runs the KDE algorithm for both subsets of data.
 
 ### `day_kde(day_data, bandwidth)`
@@ -264,14 +196,8 @@ Calculates the total displacement of the data points from the shapefile using th
 
 This project depends on the following Python libraries:
 
-- `PyQt5`: Used for building the GUI for the application.
-- `pandas`: For data handling and manipulation.
-- `numpy`: For numeric computations.
-- `matplotlib`: For plotting KDE visualizations.
-- `Pillow`: For image manipulation using `Image` class.
-
-
-
-## License
-
-This project is licensed under the MIT License. Feel free to modify and use the code according to the terms of this license.
+ `PyQt6`: Used for building the GUI for the application.
+`pandas`: For data handling and manipulation.
+ `numpy`: For numeric computations.
+ `matplotlib`: For plotting KDE visualizations.
+`Pillow`: For image manipulation using `Image` class.
