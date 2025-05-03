@@ -26,10 +26,6 @@ This project provides implementations for Kernel Density Estimation (KDE) and Mi
 - Matplotlib
 - Pandas
 
-Install dependencies using:
-```bash
-pip install numpy scipy matplotlib pandas
-```
 
 ## Usage
 
