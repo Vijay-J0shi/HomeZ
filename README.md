@@ -1,18 +1,4 @@
 
-### ▶ Click the image below to watch the video on YouTube!
-<a href="https://youtu.be/15NYxZJi7tU">
-  <img src="https://img.youtube.com/vi/15NYxZJi7tU/0.jpg" width="800" height="400" alt="Click to watch">
-</a>  
-
-
-
-<div align="center">
-
-  
-<br/>
-
-<br/>
-
 <br/>
 
   <p>
@@ -21,6 +7,36 @@
   </p>
 
 <br/>
+### ▶ Click the image below to watch the video on YouTube!
+<a href="https://youtu.be/15NYxZJi7tU">
+  <img src="https://img.youtube.com/vi/15NYxZJi7tU/0.jpg" width="800" height="400" alt="Click to watch">
+</a>  
+
+
+# HomeZ: Kernel Density Estimation and Minimum Convex Polygon
+
+## Overview
+
+This project provides implementations for Kernel Density Estimation (KDE) and Minimum Convex Polygon (MCP) algorithms. These methods are used for spatial analysis and visualization of geographical data points, offering insights into density distributions and convex boundary approximations for datasets. Both algorithms are equipped with visualization features that output results as `.tiff` images.
+
+## Features
+
+1. **Kernel Density Estimation (KDE)**:
+   - Visualizes the density of data points using Gaussian Kernel Density Estimation.
+   - Supports configurable bandwidth for kernel smoothing.
+   - Generates a density plot that is saved in `.tiff` format.
+
+2. **Minimum Convex Polygon (MCP)**:
+   - Computes the convex hull that encloses a given set of points.
+   - Visualizes the convex polygon and the points, and saves the result as a `.tiff` image.
+
+<div align="center">
+
+  
+<br/>
+
+<br/>
+
 
 
 
@@ -45,18 +61,7 @@ This is a desktop application built using Python and PyQt5 that allows users to 
 6. **Back Navigation**: Option to go back to the file selection window.
 7. **Resizable Layout**: Adapts to different screen sizes for improved user experience.
 
-## Project Structure
 
-```bash
-.
-├── app.py                        # Main entry point for the application
-├── img_ploter.py                 # Contains functions for Kernel Density Estimation (KDE)
-├── minimum_convex_polygon.py      # Contains functions for Minimum Convex Polygon (MCP) computation
-├── requirements.txt              # List of dependencies
-├── nature.jpg                    # Background image used in the application
-├── README.md                     # This README file
-└── assets/                       # Folder for assets (images, logos, etc.)
-```
 
 
 HomeZ has a MIT-style license, as found in the MIT License file.
