@@ -167,20 +167,3 @@ def dist(path):
         print(f"Error in dist: {e}", flush=True)
         traceback.print_exc()
         sys.exit(1)
-
-if __name__ == "__main__":
-    file_path = r"D:/College_Projects/HomeZ/Sample data/kano atiq.csv"
-    print(os.path.exists(file_path), flush=True)
-    bandwidth = 0.5
-    print(f"Starting KDE calculation with bandwidth {bandwidth}...", flush=True)
-    try:
-        day_kde, night_kde = kde(file_path, bandwidth)
-        print("KDE success - Day buffer:", day_kde, "Night buffer:", night_kde, flush=True)
-        day_kde.seek(0)
-        night_kde.seek(0)
-        print("Day KDE buffer size:", len(day_kde.read()), flush=True)
-        print("Night KDE buffer size:", len(night_kde.read()), flush=True)
-    except Exception as e:
-        print(f"Main block error: {e}", flush=True)
-        traceback.print_exc()
-        sys.exit(1)
