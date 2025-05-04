@@ -43,26 +43,63 @@ This project provides implementations for Kernel Density Estimation (KDE) and Mi
 
 </div>
 
-# File Selector and Data Processing Tool
+### Scope
+HomeZ is a PyQt6-based desktop application that enables users to:
+- Upload CSV files containing geospatial data (longitude, latitude, timestamps).
+- Perform KDE and MCP analyses with customizable parameters (bandwidth, confidence intervals).
+- Visualize day/night movement patterns as TIFF images.
+- Export results (images, Excel reports) and view data tables.
+- Provide robust error handling and logging for reliability.
 
-## Overview
+### Definitions, Acronyms, and Abbreviations
+- **KDE**: Kernel Density Estimation
+- **MCP**: Minimum Convex Polygon
+- **PyQt6**: Python GUI framework
+- **GeoPandas**: Library for geospatial data processing
+- **Matplotlib**: Plotting library for visualizations
+- **TIFF**: Tagged Image File Format
+- **CSV**: Comma-Separated Values
 
-This is a desktop application built using Python and PyQt5 that allows users to select CSV files, choose a data processing algorithm (Minimum Convex Polygon (MCP) or Kernel Density Estimation (KDE)), and visualize the results through image rendering. It is designed with a sleek, modern user interface that features data visualization, file selection, and result downloading functionalities.
+### References
+- PyQt6 Documentation: https://www.riverbankcomputing.com/static/Docs/PyQt6/
+- GeoPandas Documentation: https://geopandas.org/
+- Matplotlib Documentation: https://matplotlib.org/
 
-## Features
+### Product Perspective
+HomeZ is a standalone desktop application for ecological researchers, operating independently on user machines. It integrates geospatial data processing (GeoPandas), statistical analysis (SciPy), and visualization (Matplotlib) within a PyQt6 GUI, providing a specialized tool for home range analysis.
 
-1. **File Selection**: Allows users to select a CSV file for processing.
-2. **Algorithm Selection**: Offers two algorithms for data processing:
-   - MCP (Minimum Convex Polygon)
-   - KDE (Kernel Density Estimation)
-3. **Data Visualization**: Displays the processed images for day and night data.
-4. **Error Handling**: Validates inputs and provides feedback for invalid selections.
-5. **Download Functionality**: Allows users to save the processed images and data to their local machine.
-6. **Back Navigation**: Option to go back to the file selection window.
-7. **Resizable Layout**: Adapts to different screen sizes for improved user experience.
+### Product Functions
+- **File Upload**: Import CSV files with geospatial data (longitude, latitude, timestamps).
+- **Data Processing**: Separate day/night coordinates and compute distances/displacements.
+- **KDE Analysis**: Generate density maps for day/night data with customizable bandwidth (0-1).
+- **MCP Analysis**: Calculate convex hulls with confidence intervals (7-100%) and compute areas.
+- **Visualization**: Display day/night KDE/MCP plots as TIFF images in the GUI.
+- **Export**: Save TIFF images and Excel reports with distance data.
+- **Data View**: Show processed data in a table view.
+- **Logging**: Log errors and process steps for debugging.
 
+### User Classes and Characteristics
+- **Ecological Researchers**: Primary users analyzing animal movement data, requiring intuitive GUI and reliable outputs.
+- **Developers**: Maintainers who debug and extend the application using logs and modular code.
 
+### Operating Environment
+- **Platform**: Windows, macOS, Linux (Python 3.10)
+- **Libraries**: PyQt6, GeoPandas, Matplotlib, Pandas, NumPy, SciPy
+- **Hardware**: Standard desktop/laptop with sufficient memory for geospatial processing
 
+### Design and Implementation Constraints
+- Input files must be CSV with columns for longitude, latitude, and timestamps (NST Time).
+- KDE requires at least 2 points; MCP requires at least 3 points.
+- Visualizations are limited to TIFF format.
+- Non-interactive Matplotlib backend (`Agg`) for compatibility.
+
+### Assumptions and Dependencies
+- **Assumptions**:
+  - Users provide valid CSV files with required columns.
+  - System has sufficient memory for large datasets.
+- **Dependencies**:
+  - Python libraries: `pyqt6`, `geopandas`, `matplotlib`, `pandas`, `numpy`, `scipy`
+  - System: Python 3.10, compatible OS
 
 HomeZ has a MIT-style license, as found in the MIT License file.
 
