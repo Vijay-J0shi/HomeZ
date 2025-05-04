@@ -6,13 +6,10 @@ class PandasModel(QAbstractTableModel):
     def __init__(self, df=pd.DataFrame(), parent=None):
         super().__init__(parent)
         self._df = df
-
     def rowCount(self, parent=None):
         return self._df.shape[0]
-
     def columnCount(self, parent=None):
         return self._df.shape[1]
-
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if not index.isValid():
             return None
@@ -23,7 +20,6 @@ class PandasModel(QAbstractTableModel):
         elif role == Qt.ItemDataRole.BackgroundRole:
             return QBrush(QColor("#333"))
         return None
-
     def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
         if role == Qt.ItemDataRole.DisplayRole:
             if orientation == Qt.Orientation.Horizontal:
