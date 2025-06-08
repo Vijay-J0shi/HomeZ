@@ -8,6 +8,8 @@
 
 <br/>
 
+**Project Report** -> https://drive.google.com/file/d/1Hlg9GqbIr7KhoL2xkuKvghPBDt698qLX/view?usp=drive_link
+
 **Download Application from Here** -> https://drive.google.com/drive/folders/14VNw261UIGDu9GAaL9EH1bntbg5zQ14I?usp=sharing
 
 ### ▶ Click the image below to watch the video on YouTube!
